@@ -94,8 +94,8 @@
 
   var renderAds = function (adsItems) {
     var adsElements = '';
-    adsItems.forEach(function (item, i) {
-      adsElements += renderAdsItem(adsItems[i]);
+    adsItems.forEach(function (item) {
+      adsElements += renderAdsItem(item);
     });
     return adsElements;
   };
