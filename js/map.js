@@ -9,6 +9,7 @@
   var mapContainer = document.querySelector('.tokyo__pin-map');
   var lodgeTimplate = document.querySelector('#lodge-template').content;
   var dialogPanel = document.querySelector('.dialog__panel');
+  var dialogTitle = document.querySelector('.dialog__title');
 
   var renderDialog = function (generatedAd) {
     var dialogPanelTemplate = lodgeTimplate.cloneNode(true);
@@ -18,9 +19,16 @@
     dialogPanelTemplate.querySelector('.lodge__type').textContent = typeList[generatedAd.offer.type];
     dialogPanelTemplate.querySelector('.lodge__rooms-and-guests').textContent = 'Для ' + generatedAd.offer.guests + ' гостей в ' + generatedAd.offer.rooms + ' комнатах';
     dialogPanelTemplate.querySelector('.lodge__checkin-time').textContent = 'Заезд после  ' + generatedAd.offer.checkin + ', выезд до ' + generatedAd.offer.checkout;
-    dialogPanelTemplate.querySelector('.lodge__features').innerHTML = generatedAd.offer.features;
+
+    var featuresStr = '';
+    generatedAd.offer.features.forEach(function (el) {
+      featuresStr += '<span class="feature__image feature__image--' + el + '"></span>';
+    });
+
+    dialogPanelTemplate.querySelector('.lodge__features').innerHTML = featuresStr;
     dialogPanelTemplate.querySelector('.lodge__description').innerHTML = generatedAd.offer.description;
     dialogPanel.innerHTML = dialogPanelTemplate.querySelector('.dialog__panel').innerHTML;
+    dialogTitle.querySelector('img').setAttribute('src', generatedAd.author.avatar);
 
   };
 
@@ -36,6 +44,14 @@
 
   var getRandomItem = function (arr) {
     return arr[getRandomNumber(0, arr.length)];
+  };
+
+  var getRandomCountItems = function (arr) {
+    var arrShuffle = arr.sort(function () {
+      return 0.5 - Math.random();
+    });
+    var randomLength = getRandomNumber(1, arr.length);
+    return arrShuffle.splice(0, randomLength);
   };
 
   var generateAds = function (max) {
@@ -55,7 +71,7 @@
           guests: getRandomNumber(1, 10),
           checkin: getRandomItem(checkinCheckoutList),
           checkout: getRandomItem(checkinCheckoutList),
-          features: getRandomItem(featuresList),
+          features: getRandomCountItems(featuresList),
           description: '',
           photos: [],
         },
