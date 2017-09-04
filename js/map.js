@@ -10,7 +10,7 @@
   var lodgeTimplate = document.querySelector('#lodge-template').content;
   var dialogPanel = document.querySelector('.dialog__panel');
   var dialogTitle = document.querySelector('.dialog__title');
-
+  var generatedAds = [];
   var renderDialog = function (generatedAd) {
     var dialogPanelTemplate = lodgeTimplate.cloneNode(true);
     dialogPanelTemplate.querySelector('.lodge__title').textContent = generatedAd.offer.title;
@@ -33,7 +33,7 @@
   };
 
   var init = function () {
-    var generatedAds = generateAds();
+    generatedAds = generateAds();
     renderDialog(generatedAds[0]);
     mapContainer.innerHTML = renderAds(generatedAds);
   };
@@ -47,10 +47,11 @@
   };
 
   var getRandomCountItems = function (arr) {
-    var arrShuffle = arr.sort(function () {
+    var arrShuffle = arr.slice(0);
+    arrShuffle = arrShuffle.sort(function () {
       return 0.5 - Math.random();
     });
-    var randomLength = getRandomNumber(1, arr.length);
+    var randomLength = getRandomNumber(1, arrShuffle.length);
     return arrShuffle.splice(0, randomLength);
   };
 
@@ -84,9 +85,9 @@
     return ads;
   };
 
-  var renderAdsItem = function (adsItem) {
+  var renderAdsItem = function (adsItem, id) {
     var adsElement = '';
-    adsElement += '<div class="pin" style="left:' + adsItem.location.x + 'px; top:' + adsItem.location.y + 'px">';
+    adsElement += '<div data_id="' + id + '" class="pin" tabindex="0" style="left:' + adsItem.location.x + 'px; top:' + adsItem.location.y + 'px">';
     adsElement += '<img src="' + adsItem.author.avatar + '" class="rounded" width="40" height="40">';
     adsElement += '</div>';
     return adsElement;
@@ -94,12 +95,58 @@
 
   var renderAds = function (adsItems) {
     var adsElements = '';
-    adsItems.forEach(function (item) {
-      adsElements += renderAdsItem(item);
+    adsItems.forEach(function (item, index) {
+      adsElements += renderAdsItem(item, index);
     });
     return adsElements;
   };
 
   init();
+  var KEYCODE_ENTER = 13;
+  var KEYCODE_ESC = 27;
 
+  var pinElements = document.querySelectorAll('.pin');
+  var dialog = document.querySelector('.dialog');
+  var dialogClose = document.querySelector('.dialog__close');
+
+  // обработчик активной-неактивной метки на карте
+  var pinClickHandler = function (e) {
+    pinElements.forEach(function (el) {
+      el.classList.remove('pin--active');
+    });
+    e.currentTarget.classList.add('pin--active');
+    var id = e.currentTarget.getAttribute('data_id');
+    var generatedAd = generatedAds[id];
+    renderDialog(generatedAd);
+
+    dialog.classList.remove('hidden');
+  };
+
+  // открыть диалог нажатием  кнопки enter
+  document.addEventListener('keydown', function (evt) {
+    if (evt.keyCode === KEYCODE_ENTER) {
+      dialog.classList.remove('hidden');
+    }
+  });
+
+  document.addEventListener('keydown', function (evt) {
+    if (evt.keyCode === KEYCODE_ESC) {
+      dialog.classList.add('hidden');
+      pinElements.forEach(function (el) {
+        el.classList.remove('pin--active');
+      });
+    }
+  });
+  // тут навешиваем обработчики на все метки
+  for (i = 0; i < pinElements.length; i++) {
+    pinElements[i].addEventListener('click', pinClickHandler);
+  }
+  // закрытие блока с объявлением
+  var dialogClikHander = function () {
+    dialog.classList.add('hidden');
+    pinElements.forEach(function (el) {
+      el.classList.remove('pin--active');
+    });
+  };
+  dialogClose.addEventListener('click', dialogClikHander);
 })();
