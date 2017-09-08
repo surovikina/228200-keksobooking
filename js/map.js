@@ -149,4 +149,86 @@
     });
   };
   dialogClose.addEventListener('click', dialogClikHander);
+
+  // Обработчик зависимости от время заезда
+  var timeinSelect = document.querySelector('#timein');
+  var timeoutSelect = document.querySelector('#timeout');
+
+  var changeEventHandler = function (e) {
+    var valueTwo = e.target.value;
+    timeoutSelect.value = valueTwo;
+    timeinSelect.value = valueTwo;
+  };
+
+  timeinSelect.addEventListener('change', changeEventHandler);
+  timeoutSelect.addEventListener('change', changeEventHandler);
+  // Обработчик зависимости от типа жилья
+  var typeLodging = document.querySelector('#type');
+  var priceLodgin = document.querySelector('#price');
+
+  var changeInputHandler = function (e) {
+    var valueLodging = e.target.value;
+    switch (valueLodging) {
+      case 'bungalo':
+        priceLodgin.value = '0';
+        break;
+      case 'flat':
+        priceLodgin.value = '1000';
+        break;
+      case 'house':
+        priceLodgin.value = '5000';
+        break;
+      case 'palace':
+        priceLodgin.value = '10000';
+    }
+  };
+
+  typeLodging.addEventListener('change', changeInputHandler);
+  // Обработчик зависимости кол-ва комнат
+  var roomNumber = document.querySelector('#room_number');
+  var capacity = document.querySelector('#capacity');
+
+  var changeCapacityHandler = function (e) {
+    var valueRoom = e.target.value;
+    switch (valueRoom) {
+      case '1':
+        capacity.value = '1';
+        break;
+      case '2':
+        capacity.value = '2';
+        break;
+      case '3':
+        capacity.value = '3';
+        break;
+      case '100':
+        capacity.value = '0';
+    }
+  };
+
+  var changeRoomHandler = function (e) {
+    var valueCapacity = e.target.value;
+    switch (valueCapacity) {
+      case '1':
+        roomNumber.value = '1';
+        break;
+      case '2':
+        roomNumber.value = '2';
+        break;
+      case '3':
+        roomNumber.value = '3';
+        break;
+      case '0':
+        roomNumber.value = '100';
+    }
+  };
+  roomNumber.addEventListener('change', changeCapacityHandler);
+  capacity.addEventListener('change', changeRoomHandler);
+
+  // После отправки формы все значения должны сбрасываться на те, что были по умолчанию
+  var formSubmit = document.querySelector('.notice__form');
+  var buutonSend = document.querySelector('.form__submit');
+  buutonSend.addEventListener('submit', function () {
+    formSubmit.reset();
+  });
+
 })();
