@@ -164,22 +164,22 @@
   timeoutSelect.addEventListener('change', changeEventHandler);
   // Обработчик зависимости от типа жилья
   var typeLodging = document.querySelector('#type');
-  var priceLodgin = document.querySelector('#price');
+  var priceInput = document.querySelector('#price');
 
   var changeInputHandler = function (e) {
     var valueLodging = e.target.value;
     switch (valueLodging) {
       case 'bungalo':
-        priceLodgin.value = '0';
+        priceInput.value = '0';
         break;
       case 'flat':
-        priceLodgin.value = '1000';
+        priceInput.value = '1000';
         break;
       case 'house':
-        priceLodgin.value = '5000';
+        priceInput.value = '5000';
         break;
       case 'palace':
-        priceLodgin.value = '10000';
+        priceInput.value = '10000';
     }
   };
 
@@ -223,12 +223,34 @@
   };
   roomNumber.addEventListener('change', changeCapacityHandler);
   capacity.addEventListener('change', changeRoomHandler);
+  // Валидация отправки формs
+
+  var titleInput = document.querySelector('#title');
+  var addressInput = document.querySelector('#address');
+
+
+  titleInput.addEventListener('invalid', function () {
+    if (!titleInput.validity.valid) {
+      titleInput.style.border = "2px solid red";
+    }
+  });
+  addressInput.addEventListener('invalid', function () {
+    if (!addressInput.validity.valid) {
+      addressInput.style.border = "2px solid red";
+    }
+  });
+  priceInput.addEventListener('invalid', function () {
+    if (!priceInput.validity.valid) {
+      priceInput.style.border = "2px solid red";
+    }
+  });
 
   // После отправки формы все значения должны сбрасываться на те, что были по умолчанию
-  var formSubmit = document.querySelector('.notice__form');
   var buutonSend = document.querySelector('.form__submit');
+  var forms = document.querySelector('.notice__form');
+
   buutonSend.addEventListener('submit', function () {
-    formSubmit.reset();
+    forms.reset();
   });
 
 })();
